@@ -725,7 +725,7 @@
             display: grid;
             grid-area: stmt !important;
             height: 100%;
-            overflow-y: scroll;
+            overflow-y: auto;
         }
         #results-body {
             display: block;
@@ -734,7 +734,7 @@
             height: 100%;
             overflow-y: scroll;
         }
-        code > table {
+        #source-code {
             height: 100%;
             overflow-y: auto;
         }
