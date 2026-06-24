@@ -680,6 +680,11 @@
             display: block;
             grid-area: other !important;
             color: var(--col-text);
+            height: 100%;
+            overflow-y: scroll;
+        }
+        #results-body > table {
+            height: 100px;
         }
         h2:nth-child(1) {
             display: block !important;
@@ -714,7 +719,7 @@
             background-size: contain;
         }
     `
-    if (location.pathname.includes("/hof/")) {
+    if (location.pathname.includes("/hof/") || location.pathname.includes("submission")) {
         const styleElem2 = document.createElement("style");
         styleElem2.innerHTML = hofInsideStyle;
         document.body.appendChild(styleElem2);
