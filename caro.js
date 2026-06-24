@@ -8,7 +8,11 @@
         console.log(`%c[CARO] %c chose background image: %c${bgImg}`, "color: var(--col-text); font-size: 2rem;", "color: white; font-size: 1rem;", "");
         window.addEventListener("load", () => {
             const styleElem = document.createElement("style");
-            styleElem.innerHTML = style(bgImg);
+            styleElem.innerHTML = `
+                :root {
+                    --bg-img: url(${bgImg});
+                }
+            `;
             document.body.appendChild(styleElem);
         });
     }
@@ -304,16 +308,6 @@
             font-size: 2rem;
             writing-mode: vertical-lr;
         }
-        .nav-link {
-            background-color: var(--col-surface0) !important;
-            border: none;
-            color: var(--col-text) !important;
-        }
-        .nav-link.active {
-            background-color: var(--col-overlay0) !important;
-            border: none;
-            color: var(--col-text) !important;
-        }
         .leaderboard-grid {
             width: 60% !important;
         }
@@ -354,6 +348,7 @@
     const PSTMT=".container-xl > div:nth-child(1 of div)"
     const PINFO=".container-xl:nth-child(2 of div) > div:nth-child(2 of div)"
     const PINFO2=".container-xl > h2:nth-child(1 of h2)"
+    const PINFO3=".container-xl:nth-child(2 of div) > div:nth-child(3 of div)"
     const problemStatementStyle=`
         .container-xl {
             padding-top: 20px;
@@ -384,11 +379,19 @@
             font-size: 1rem !important;
             padding: 4px;
         }
+        h2, p {
+            display: none;
+        }
         ${SUBMIT} {
             grid-area: submit;
         }
         ${PSTMT} {
             grid-area: stmt;
+        }
+        ${PINFO3}{ 
+            grid-area: other;
+            height: 10%;
+            display: none;
         }
         ${PINFO} { 
             grid-area: other;
@@ -410,6 +413,13 @@
         }
         ${PINFO2} { 
             display: none;
+        }
+        ${PINFO} .card {
+            background-color: var(--col-base);
+            border-radius: 30px;
+        }
+        ${PINFO} .card a {
+            color: var(--col-text);
         }
     `;
     if (location.pathname.startsWith("/problem")) {
@@ -473,6 +483,16 @@
         .nav-tabs {
             border: none;
         }
+        .nav-link {
+            background-color: var(--col-surface0) !important;
+            border: none;
+            color: var(--col-text) !important;
+        }
+        .nav-link.active {
+            background-color: var(--col-overlay0) !important;
+            border: none;
+            color: var(--col-text) !important;
+        }
     `
     if (location.pathname.startsWith("/hub/leaderboards")) {
         const styleElem2 = document.createElement("style");
@@ -534,6 +554,57 @@
     <span class="caro-navbar-item"><a class="caro-hover-teal" href="/hub/allsubs/1">提出</a></span>
     <span class="caro-navbar-item"><a class="caro-hover-red" href="/accounts/logout">ログアウト</a></span>
     `;
+
+    const submissionsStyle = `
+        .table {
+            grid-area: stmt !important;
+        }
+        .table thead {
+            height: auto;
+        }
+        .table tbody th {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        .table tbody tr td {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem !important;
+        }
+        body > div.container-xl > table.mb-2 > tbody {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        body > div.container-xl > div:nth-child(2) {
+            display: block;
+        }
+
+        #solution-form {
+            grid-area: submit;
+        }
+
+        body > .container-xl {
+            background-color: transparent;
+            background-image: var(--bg-img);
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: contain;
+        }
+    `
+    if (location.pathname.includes("submissions")) {
+        const styleElem2 = document.createElement("style");
+        styleElem2.innerHTML = submissionsStyle;
+        document.body.appendChild(styleElem2);
+    }
 
     const t = async (f) => {
         try { await f(); } catch {};
