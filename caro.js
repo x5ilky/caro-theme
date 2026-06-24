@@ -10,6 +10,22 @@
         }
         return Math.abs(hash);
     };
+    const colors = [
+        "red",
+        "rosewater",
+        "flamingo",
+        "pink",
+        "mauve",
+        "maroon",
+        "peach",
+        "yellow",
+        "green",
+        "teal",
+        "sky",
+        "sapphire",
+        "blue",
+        "lavender",
+    ]
     window.caro = {};
     window.caro.setBackgroundImages = (imgs) => {
         bgImg = (imgs?.[Math.floor(Math.random() * imgs.length)]) ?? defaultBgImg;
@@ -474,6 +490,7 @@
             align-items: center;
             justify-content: start;
             font-size: 1.3rem;
+            color: var(--user-col);
         }
         .solvecount {
             display: flex;
@@ -544,6 +561,10 @@
                 if (e.textContent.trim() in traditionalChineseNumbers){
                     e.textContent = traditionalChineseNumbers[e.textContent.trim()];
                 }
+            }
+            const elems2 = document.querySelectorAll(".username-field");
+            for (const e of elems2) {
+                e.style.setProperty("--user-col", `var(--col-${colors[generateHash(e.textContent.trim())%colors.length]})`);
             }
         });
         observer.observe(document.body, {
@@ -645,24 +666,8 @@
 
         window.addEventListener("load", () => {
             const elems = document.querySelectorAll(".solver");
-            const colors = [
-                "red",
-                "rosewater",
-                "flamingo",
-                "pink",
-                "mauve",
-                "maroon",
-                "peach",
-                "yellow",
-                "green",
-                "teal",
-                "sky",
-                "sapphire",
-                "blue",
-                "lavender",
-            ]
             for (const e of elems) {
-                e.style.setProperty("--user-col", `var(--col-${colors[generateHash(e.textContent)%colors.length]})`);
+                e.style.setProperty("--user-col", `var(--col-${colors[generateHash(e.textContent.trim().slice(0, -1))%colors.length]})`);
             }
         });
     }
