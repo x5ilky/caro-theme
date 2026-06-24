@@ -2,6 +2,14 @@
  * CARO - Orac Theme
  */
 (async () => {
+    const generateHash = (string) => {
+        let hash = 0;
+        for (const char of string) {
+            hash = (hash << 5) - hash + char.charCodeAt(0);
+            hash |= 0;
+        }
+        return Math.abs(hash);
+    };
     window.caro = {};
     window.caro.setBackgroundImages = (imgs) => {
         bgImg = (imgs?.[Math.floor(Math.random() * imgs.length)]) ?? defaultBgImg;
@@ -605,6 +613,109 @@
         styleElem2.innerHTML = submissionsStyle;
         document.body.appendChild(styleElem2);
     }
+
+    const hofStyle = `
+        p {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-area: stmt !important;
+        }
+        p > span > a {
+            color: var(--user-col); 
+            transition: all 200ms;
+            font-size: 1.4rem;
+        }
+        p > span > a:hover {
+            letter-spacing: 0.2rem;
+            text-decoration: none;
+            color: var(--user-col); 
+        }
+        body > .container-xl {
+            background-color: transparent;
+            background-image: var(--bg-img);
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: contain;
+        }
+    `
+    if (location.pathname.endsWith("hof")) {
+        const styleElem2 = document.createElement("style");
+        styleElem2.innerHTML = hofStyle;
+        document.body.appendChild(styleElem2);
+
+        window.addEventListener("load", () => {
+            const elems = document.querySelectorAll(".solver");
+            const colors = [
+                "red",
+                "rosewater",
+                "flamingo",
+                "pink",
+                "mauve",
+                "maroon",
+                "peach",
+                "yellow",
+                "green",
+                "teal",
+                "sky",
+                "sapphire",
+                "blue",
+                "lavender",
+            ]
+            for (const e of elems) {
+                e.style.setProperty("--user-col", `var(--col-${colors[generateHash(e.textContent)%colors.length]})`);
+            }
+        });
+    }
+    const hofInsideStyle = `
+        #submission-code {
+            display: grid;
+            grid-area: stmt !important;
+        }
+        #results-body {
+            display: block;
+            grid-area: other !important;
+            color: var(--col-text);
+        }
+        h2:nth-child(1) {
+            display: block !important;
+            grid-area: submit !important;
+        }
+        .table th .badge {
+            writing-mode: horizontal-tb !important;
+        }
+        .table th {
+            color: var(--col-text) !important;
+        }
+        .table tr {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+        .collapse > table, .collapsing > table {
+            background-color: var(--col-base);
+        }
+        .collapsing > table tbody ,
+        .collapse > table tbody {
+            background-color: var(--col-base);
+            padding: 20px;
+        }
+        body > .container-xl {
+            background-color: transparent;
+            background-image: var(--bg-img);
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: contain;
+        }
+    `
+    if (location.pathname.includes("/hof/")) {
+        const styleElem2 = document.createElement("style");
+        styleElem2.innerHTML = hofInsideStyle;
+        document.body.appendChild(styleElem2);
+    }
+
+
 
     const t = async (f) => {
         try { await f(); } catch {};
