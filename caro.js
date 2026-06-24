@@ -1,9 +1,26 @@
+/*
+ * CARO - Orac Theme
+ */
 (async () => {
+    window.caro = {};
+    window.caro.setBackgroundImages = (imgs) => {
+        bgImg = (imgs?.[Math.floor(Math.random() * imgs.length)]) ?? defaultBgImg;
+        console.log(`%c[CARO] %c chose background image: %c${bgImg}`, "color: var(--col-text); font-size: 2rem;", "color: white; font-size: 1rem;", "");
+        window.addEventListener("load", () => {
+            const styleElem = document.createElement("style");
+            styleElem.innerHTML = style(bgImg);
+            document.body.appendChild(styleElem);
+        });
+    }
+    window.caro.addStyle = (sty) => {
+        window.addEventListener("load", () => {
+            const styleElem = document.createElement("style");
+            styleElem.innerHTML = sty;
+            document.body.appendChild(styleElem);
+        });
+    };
     const defaultBgImg = "https://raw.githubusercontent.com/x5ilky/x5ilky/refs/heads/main/img/pngegg.png";
     let bgImg = defaultBgImg;
-    if(window?.caroBackgroundImages !== undefined && window.caroBackgroundImages.length > 0){
-        bgImg = window.caroBackgroundImages[Math.floor(Math.random() * window.caroBackgroundImages.length)];
-    }
     function waitForElement(selector, root = document) {
         return new Promise(resolve => {
             const existing = root.querySelector(selector);
@@ -28,7 +45,7 @@
             });
         });
     }
-    const style=`
+    const style=(bgImg) => `
         @import url('https://cdn.jsdelivr.net/npm/@catppuccin/palette/css/catppuccin.css');
         @import url('https://fonts.googleapis.com/css2?family=Kaisei+HarunoUmi&display=swap');
         .kaisei-harunoumi-regular {
@@ -328,7 +345,7 @@
         }
     `;
     const styleElem = document.createElement("style");
-    styleElem.innerHTML = style;
+    styleElem.innerHTML = style(bgImg);
     await waitForElement("body > link");
     document.body.appendChild(styleElem);
     
@@ -543,5 +560,7 @@
                 elem.textContent = translate[elem.textContent.trim()];
             }
         }
+
+        // custom background images?
     });
 })();
