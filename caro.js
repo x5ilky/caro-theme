@@ -139,6 +139,7 @@
             background-color: var(--col-overlay2) !important;
         }
         .container-xl {
+            box-sizing: border-box;
             max-width: none !important;
             height: 100vh;
             overflow-y: scroll;
@@ -217,9 +218,6 @@
         }
         .table th  .badge {
             writing-mode: sideways-lr;
-        }
-        .table {
-            height: 100%;
         }
         .table tbody {
             height: 100%;
@@ -367,15 +365,27 @@
     await waitForElement("body > link");
     document.body.appendChild(styleElem);
     
+    const problemListStyle=`
+        .table {
+            height: 100%;
+        }
+    `;
+    if (location.pathname.includes("hub/personal")) {
+        const styleElem2 = document.createElement("style");
+        styleElem2.innerHTML = problemListStyle;
+        document.body.appendChild(styleElem2);
+    }
     const TLML=".container-xl > table:nth-child(1 of table)"
     const SUBMIT=".container-xl > table:nth-child(2 of table)"
     const PSTMT=".container-xl > div:nth-child(1 of div)"
     const PINFO=".container-xl:nth-child(2 of div) > div:nth-child(2 of div)"
     const PINFO2=".container-xl > h2:nth-child(1 of h2)"
     const PINFO3=".container-xl:nth-child(2 of div) > div:nth-child(3 of div)"
+
     const problemStatementStyle=`
         .container-xl {
             padding-top: 20px;
+            box-sizing: border-box;
             display: grid;
             width: 100%;
             height: 100vh;
@@ -585,11 +595,15 @@
     `;
 
     const submissionsStyle = `
-        .table {
+        body > div.container-xl > table.table {
             grid-area: stmt !important;
         }
         .table thead {
             height: auto;
+        }
+        body > div.container-xl > table.table > tbody {
+            height: 100%;
+            overflow-y: auto;
         }
         .table tbody th {
             display: flex;
@@ -619,6 +633,9 @@
 
         #solution-form {
             grid-area: submit;
+            overflow: auto;
+            width: 100%;
+            height: 100%;
         }
 
         body > .container-xl {
@@ -627,6 +644,20 @@
             background-repeat: no-repeat;
             background-position: right center;
             background-size: contain;
+        }
+        h2 {
+            display: none;
+        }
+        .container-xl {
+            padding-top: 20px;
+            display: grid;
+            width: 100%;
+            height: 100vh;
+            grid-template-columns: 3fr 2fr;
+            grid-template-areas:
+                "submit tlml"
+                "stmt other" "stmt other" "stmt other" "stmt other" "stmt other";
+            overflow: hidden;
         }
     `
     if (location.pathname.includes("submissions")) {
@@ -645,6 +676,20 @@
             color: var(--user-col); 
             transition: all 200ms;
             font-size: 1.4rem;
+        }
+        .username-field > a {
+            color: var(--user-col); 
+            transition: all 200ms;
+            font-size: 1.4rem;
+        }
+        .leaderboard-grid li {
+            box-shadow: 0 0 0 1px var(--col-overlay0) inset;
+        }
+        .leaderboard-grid li .place  {
+            border-right: 1px solid var(--col-overlay0);
+        }
+        .leaderboard-grid li .solvecount  {
+            border-left: 1px solid var(--col-overlay0);
         }
         p > span > a:hover {
             letter-spacing: 0.2rem;
@@ -669,12 +714,18 @@
             for (const e of elems) {
                 e.style.setProperty("--user-col", `var(--col-${colors[generateHash(e.textContent.trim().slice(0, -1))%colors.length]})`);
             }
+            const elems2 = document.querySelectorAll(".username-field");
+            for (const e of elems2) {
+                e.style.setProperty("--user-col", `var(--col-${colors[generateHash(e.textContent.trim().slice(0, -1))%colors.length]})`);
+            }
         });
     }
     const hofInsideStyle = `
         #submission-code {
             display: grid;
             grid-area: stmt !important;
+            height: 100%;
+            overflow-y: scroll;
         }
         #results-body {
             display: block;
@@ -682,6 +733,10 @@
             color: var(--col-text);
             height: 100%;
             overflow-y: scroll;
+        }
+        code > table {
+            height: 100%;
+            overflow-y: auto;
         }
         #results-body > table {
             height: 100px;
@@ -719,7 +774,7 @@
             background-size: contain;
         }
     `
-    if (location.pathname.includes("/hof/") || location.pathname.includes("submission")) {
+    if (location.pathname.includes("/hof/") || location.pathname.includes("/submission/")) {
         const styleElem2 = document.createElement("style");
         styleElem2.innerHTML = hofInsideStyle;
         document.body.appendChild(styleElem2);
